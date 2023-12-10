@@ -1,0 +1,73 @@
+@Metadata.layer: #CUSTOMER
+@UI.headerInfo:
+{
+    typeNamePlural: 'Employees',
+    typeName: 'Employee',
+    title.value: 'EmployeeNumber',
+    description.value: 'LastName'
+}
+annotate entity ZC_RKC_EMP
+    with 
+{
+    /*Facetes*/
+    @UI.facet: 
+    [
+    { position: 10, type: #FIELDGROUP_REFERENCE, targetQualifier: 'EmployeeDetails', label: 'Employee Details' },
+    { position:20, type: #LINEITEM_REFERENCE, targetElement: '_VacationRequests', label: 'Vacation Requests'},
+    { position:30, type: #LINEITEM_REFERENCE, targetElement: '_VacationEntitlements', label: 'Vacation Entitlements'},
+    { position: 40, type: #FIELDGROUP_REFERENCE, targetQualifier: 'AdminData', label: 'Administrative Data' }
+    ]
+
+
+  /*Fields*/
+    @UI.fieldGroup: [{ position: 10, qualifier: 'AdminData' }]
+    EmployeeId;
+    
+    @UI.lineItem: [{ position: 20 }]
+    @UI.selectionField: [ { position: 10 } ]
+    @UI.fieldGroup: [{ position: 10, qualifier: 'EmployeeDetails' }]
+    EmployeeNumber;
+    
+    @UI.lineItem: [{ position: 30 }]
+    @UI.fieldGroup: [{ position: 20, qualifier: 'EmployeeDetails' }]
+    FirstName;
+    
+    
+    @UI.lineItem: [{ position: 40 }]
+    @UI.fieldGroup: [{ position: 30, qualifier: 'EmployeeDetails' }]
+    LastName;
+    
+    @UI.lineItem: [{ position: 50 }]
+    @UI.selectionField: [ { position: 20 } ]
+    @UI.fieldGroup: [{ position: 40, qualifier: 'EmployeeDetails' }]
+    EntryDate;
+    
+    @UI.lineItem: [{ position: 55 }]
+    @UI.fieldGroup: [{ position:55, qualifier: 'EmployeeDetails' }]
+    VacationDays;
+    
+    @UI.lineItem: [{ position: 56 }]
+    @UI.fieldGroup: [{ position:56, qualifier: 'EmployeeDetails' }]
+    BVacReqDays;
+    
+    @UI.lineItem: [{ position: 57 }]
+    @UI.fieldGroup: [{ position:57, qualifier: 'EmployeeDetails' }]
+    GVacReqDays;
+    
+    
+    @UI.fieldGroup: [{ position: 20, qualifier: 'AdminData' }]
+    CreatedBy;
+    
+    
+    @UI.fieldGroup: [{ position: 30, qualifier: 'AdminData' }]
+    CreatedAt;
+    
+    
+    @UI.fieldGroup: [{ position: 40, qualifier: 'AdminData' }]
+    LastChangedBy;
+    
+    
+    @UI.fieldGroup: [{ position: 50, qualifier: 'AdminData' }]
+    LastChangedAt;
+ 
+}

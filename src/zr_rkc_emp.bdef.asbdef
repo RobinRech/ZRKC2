@@ -1,0 +1,118 @@
+managed implementation in class zbp_c_rkc_emp unique;
+strict ( 2 );
+
+define behavior for ZR_RKC_EMP alias Employee
+persistent table zrkc_emp
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+
+  /*associations*/
+  association _VacationRequests { create; }
+  association _VacationEntitlements { create; }
+
+  field ( readonly, numbering : managed ) EmployeeId;
+  field ( readonly ) EmployeeNumber, FirstName, LastName, EntryDate, BVacReqDays, GVacReqDays, VacationDays, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
+
+  mapping for zrkc_emp corresponding
+    {
+      EmployeeId     = id;
+      EmployeeNumber = employee_number;
+      FirstName      = first_name;
+      LastName       = last_name;
+      EntryDate      = entry_date;
+      CreatedBy      = created_by;
+      CreatedAt      = created_at;
+      LastChangedBy  = last_changed_by;
+      LastChangedAt  = last_changed_at;
+    }
+}
+
+
+/*Child Entity Vacation Application*/
+define behavior for ZR_RKC_VACREQ alias VacationRequest
+persistent table zrkc_vacreq
+lock dependent by _Employee
+authorization dependent by _Employee
+//etag master <field_name>
+{
+  /* determinations*/
+  determination DetermineVacationRequestID on modify { create; }
+  determination DetermineVacationApplicantID on modify { create; }
+  determination DetermineVacReqStatus on modify { create; }
+  determination DetermineVacReqStatusWhenEdit on modify { field VacReqApprover, VacStartDate, VacEndDate, VacReqComment; }
+  determination DetermineVacationDays on modify { create; field VacStartDate, VacEndDate; }
+
+  /* validations*/
+  validation ValidateIfEndBeforeBegin on save { create; update; }
+  validation ValidateNotEnoughVacDays on save { create; }
+
+  determine action ValidateVacationRequest
+  {
+    validation ValidateIfEndBeforeBegin;
+    validation ValidateNotEnoughVacDays;
+  }
+
+
+
+  update;
+  delete;
+
+  field ( readonly, numbering : managed ) VacReqId;
+  field ( mandatory : create ) VacReqApprover, VacStartDate, VacEndDate;
+  field ( readonly ) CreatedAt, CreatedBy, LastChangedAt, LastChangedBy, VacReqApplicant, VacReqStatus, VacReqDays;
+
+  /* actions*/
+  action ApproveVacReq result [1] $self;
+  action DeclineVacReq result [1] $self;
+
+  association _Employee;
+
+  mapping for zrkc_vacreq corresponding
+    {
+      VacReqId        = id;
+      VacReqApplicant = applicant;
+      VacReqApprover  = approver;
+      VacStartDate    = start_date;
+      VacEndDate      = end_date;
+      VacReqComment   = comment_;
+      VacReqStatus    = status;
+      CreatedBy       = created_by;
+      CreatedAt       = created_at;
+      LastChangedBy   = last_changed_by;
+      LastChangedAt   = last_changed_at;
+    }
+}
+
+/*Child Entity Vacation Entitlement*/
+define behavior for ZR_RKC_VACENT alias VacationEntitlement
+persistent table zrkc_vacent
+lock dependent by _Employee
+authorization dependent by _Employee
+//etag master <field_name>
+{
+
+  update;
+  delete;
+
+  field ( readonly, numbering : managed ) VacEntId;
+  field ( readonly ) VacEntEmployee;
+
+  association _Employee;
+
+  mapping for zrkc_vacent corresponding
+    {
+      VacEntId       = id;
+      VacentEmployee = Employee;
+      Year_          = Year_;
+      VacationDays   = Vacation_days;
+      CreatedBy      = created_by;
+      CreatedAt      = created_at;
+      LastChangedBy  = last_changed_by;
+      LastChangedAt  = last_changed_at;
+    }
+}

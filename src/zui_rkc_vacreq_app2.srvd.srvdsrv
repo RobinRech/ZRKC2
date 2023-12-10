@@ -1,0 +1,5 @@
+@EndUserText.label: 'Vacation Request App2'
+define service ZUI_RKC_VACREQ_APP2 {
+  expose ZC_RKC_EMP_APP2;
+  expose ZC_RKC_VACREQ_APP2;
+}

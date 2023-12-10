@@ -1,0 +1,6 @@
+@EndUserText.label: 'Employee'
+define service ZUI_RKC_EMP {
+  expose ZC_RKC_EMP    as Employee;
+  expose ZC_RKC_VACENT as VacationEntitlement;
+  expose ZC_RKC_VACREQ as VacationRequest;
+}
